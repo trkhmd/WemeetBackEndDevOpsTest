@@ -33,7 +33,7 @@ public class EventCreationEntry {
     @Min(value = 0, message = "The price should be positive")
     private double price = 0;
 
-    @Size(min = 50, message = "Description should have at least 50 characters")
+    @Size(min = 20, message = "Description should have at least 20 characters")
     private String description;
 
     private boolean isPublic = false;
