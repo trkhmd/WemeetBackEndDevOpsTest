@@ -1,5 +1,6 @@
 package cal.api.wemeet.models;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class Event {
     private User organizer;
 
     @DBRef
-    private List<User> co_organizers;
+    private List<User> co_organizers = new ArrayList<User>();
 
     @DBRef
     private List<User> participants;

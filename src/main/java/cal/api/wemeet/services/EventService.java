@@ -1,9 +1,11 @@
 package cal.api.wemeet.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import cal.api.wemeet.models.Event;
+import cal.api.wemeet.models.User;
 import cal.api.wemeet.models.dto.request.EventCreationEntry;
 import cal.api.wemeet.repositories.EventRepository;
 import cal.api.wemeet.repositories.UserRepository;
@@ -39,5 +41,23 @@ public class EventService {
 
     public void saveEvent(Event event) {
         eventRepo.save(event);
+    }
+
+    public Event getEventById(String id) {
+        if (! eventRepo.findById(id).isPresent()) {
+            return null;
+        } else {
+            return eventRepo.findById(id).get();
+        }
+    }
+
+    public boolean isOrganizer(Event event, User user){
+        System.out.println("event.getOrganizer().getId() : " + event.getOrganizer().getId());
+        System.out.println("user.getId() : " + user.getId());
+        return user.getId().contentEquals(event.getOrganizer().getId());
+    }
+
+    public boolean isCoOrganizer(Event event, User user){
+        return event.getCo_organizers().contains(user);
     }
 }
