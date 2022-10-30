@@ -44,11 +44,11 @@ public class UserService {
         }
         catch (DisabledException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(new SimpleResponse(HttpStatus.FORBIDDEN,"User is disabled"));
+                        .body(new SimpleResponse("User is disabled"));
         }
         catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(new SimpleResponse(HttpStatus.FORBIDDEN,"Email or password is incorrect"));
+                        .body(new SimpleResponse("Email or password is incorrect"));
         }
         final UserDetails userDetails = userDetailsService.loadUserByUsername(email);
         final String token = jwtTokenUtil.generateToken(userDetails);
@@ -59,7 +59,7 @@ public class UserService {
         // verification si le mail existe deja
         if (checkEmailExists(entry.getEmail())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                            .body(new SimpleResponse(HttpStatus.BAD_REQUEST,"Email is already used"));
+                            .body(new SimpleResponse("Email is already used"));
         }
         // encode le mot de passe
         entry.setPassword(passwordEncoder.encode(entry.getPassword()));
@@ -67,7 +67,7 @@ public class UserService {
         // Create new user's account
         userRepository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED)
-                            .body(new SimpleResponse(HttpStatus.CREATED,"User created successfully!"));
+                            .body(new SimpleResponse("User created successfully!"));
     }
 
     private boolean checkEmailExists(String email) {

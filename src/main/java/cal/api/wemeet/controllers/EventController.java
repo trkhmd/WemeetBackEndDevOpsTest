@@ -46,7 +46,7 @@ public class EventController {
         eventService.saveEvent(event);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-        .body(new SimpleResponse(HttpStatus.CREATED,"Event created successfully!"));
+        .body(new SimpleResponse("Event created successfully!"));
     }
 
     @PostMapping("/cancel/{id}")
@@ -54,12 +54,12 @@ public class EventController {
         Event event = eventService.getEventById(id);
         if (event == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body(new SimpleResponse(HttpStatus.NOT_FOUND,"The event to cancel is not found!"));
+            .body(new SimpleResponse("The event to cancel is not found!"));
         }
 
         if (event.getState() == EventState.DONE){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(new SimpleResponse(HttpStatus.BAD_REQUEST,"The event is already done!"));
+            .body(new SimpleResponse("The event is already done!"));
         }
 
         User user = userService.getAuthenticatedUser();
@@ -67,10 +67,10 @@ public class EventController {
             event.setState(EventState.CANCELLED);
             eventService.saveEvent(event);
             return ResponseEntity.status(HttpStatus.OK)
-            .body(new SimpleResponse(HttpStatus.OK,"Event cancelled successfully!"));
+            .body(new SimpleResponse("Event cancelled successfully!"));
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-            .body(new SimpleResponse(HttpStatus.FORBIDDEN,"You are not allowed to cancel this event!"));
+            .body(new SimpleResponse("You are not allowed to cancel this event!"));
         }
     }
 
