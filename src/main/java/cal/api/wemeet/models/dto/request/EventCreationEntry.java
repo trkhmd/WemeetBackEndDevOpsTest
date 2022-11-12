@@ -3,7 +3,6 @@ package cal.api.wemeet.models.dto.request;
 import java.time.LocalTime;
 import java.util.Date;
 
-import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -11,7 +10,6 @@ import javax.validation.constraints.Size;
 
 public class EventCreationEntry {
 
-    @FutureOrPresent
     private Date date;
     private LocalTime time;
 
