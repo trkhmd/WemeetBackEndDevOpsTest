@@ -25,6 +25,7 @@ public class EventService {
         Event event = new Event();
         event.setDate(entry.getDate());
         event.setAddress(entry.getAddress());
+        event.setTitle(entry.getTitle());
         event.setCity(entry.getCity());
         event.setPostalCode(entry.getPostalCode());
         event.setCountry(entry.getCountry());

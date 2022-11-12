@@ -16,6 +16,8 @@ public class Event {
 
     private Date date;
 
+    private String title;
+
     private EventState state = EventState.COMING;
 
     private String Address;
@@ -155,10 +157,13 @@ public class Event {
         this.maxParticipants = maxParticipants;
     }
 
-    
+    public String getTitle() {
+        return title;
+    }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-
-    
     
 }

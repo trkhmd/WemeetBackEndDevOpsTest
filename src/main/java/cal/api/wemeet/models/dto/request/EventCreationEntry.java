@@ -18,6 +18,9 @@ public class EventCreationEntry {
     @JsonFormat(pattern="dd-MM-yyyy")
     private Date date;
 
+    @NotEmpty(message = "Title is required")
+    private String title;
+
     @NotEmpty(message = "The Address is required")
     private String Address;
 
@@ -111,5 +114,15 @@ public class EventCreationEntry {
     public void setMaxParticipants(int maxParticipants) {
         this.maxParticipants = maxParticipants;
     }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    
     
 }
