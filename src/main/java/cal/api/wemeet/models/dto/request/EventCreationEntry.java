@@ -1,22 +1,20 @@
 package cal.api.wemeet.models.dto.request;
 
+import java.time.LocalTime;
 import java.util.Date;
 
+import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class EventCreationEntry {
 
-    @Past
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @JsonFormat(pattern="dd-MM-yyyy")
+    @FutureOrPresent
     private Date date;
+
+    private LocalTime time;
 
     @NotEmpty(message = "Title is required")
     private String title;
@@ -121,6 +119,14 @@ public class EventCreationEntry {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public LocalTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalTime time) {
+        this.time = time;
     }
 
     
