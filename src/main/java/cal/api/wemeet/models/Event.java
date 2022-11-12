@@ -13,34 +13,21 @@ public class Event {
 
     @Id
     private String id;
-
     private Date date;
-
     private EventState state = EventState.COMING;
-
     private String Address;
-
     private String city;
-
     private String postalCode;
-
     private String country;
-
     private double price;
-
     private String description;
-
     @DBRef
     private User organizer;
-
     @DBRef
     private List<User> co_organizers = new ArrayList<User>();
-
     @DBRef
-    private List<User> participants;
-
+    private List<User> participants = new ArrayList<User>();
     private boolean isPublic = false;
-
     private int maxParticipants;
 
     public String getId() {
@@ -139,11 +126,11 @@ public class Event {
         this.participants = participants;
     }
 
-    public boolean isPublic() {
+    public boolean getIsPublic() {
         return isPublic;
     }
 
-    public void setPublic(boolean isPublic) {
+    public void setIsPublic(boolean isPublic) {
         this.isPublic = isPublic;
     }
 

@@ -1,11 +1,15 @@
 package cal.api.wemeet.services;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cal.api.wemeet.models.Event;
 import cal.api.wemeet.models.User;
 import cal.api.wemeet.models.dto.request.EventCreationEntry;
+import cal.api.wemeet.models.dto.response.EventDto;
 import cal.api.wemeet.repositories.EventRepository;
 import cal.api.wemeet.repositories.UserRepository;
 
@@ -20,6 +24,47 @@ public class EventService {
 
     @Autowired
     UserService userService;
+
+    public List<Event> getAllEvents(){
+        return eventRepo.findAll();
+    }
+
+    public List<EventDto> getAllPublicEvents() {
+        return eventRepo.findByIsPublic(true)
+                        .stream()
+                        .map(event -> converEventToEventDto(event))
+                        .collect(Collectors.toList());
+    }
+
+    public List<EventDto> getAllUserEvents() {
+        return eventRepo.findByOrganizerId(userService.getAuthenticatedUser().getId())
+                        .stream()
+                        .map(event -> converEventToEventDto(event))
+                        .collect(Collectors.toList());
+    }
+
+    public EventDto converEventToEventDto(Event event) {
+        EventDto eventDto = new EventDto();
+        eventDto.setId(event.getId());
+        eventDto.setDescription(event.getDescription());
+        eventDto.setDate(event.getDate());
+        eventDto.setIsPublic(event.getIsPublic());
+        eventDto.setOrganizer(userService.convertUserToUserDto(event.getOrganizer()));
+        eventDto.setParticipants(event.getParticipants()
+                                    .stream()
+                                    .map(user -> userService.convertUserToUserDto(user))
+                                    .collect(Collectors.toList()));
+        eventDto.setCo_organizers(event.getCo_organizers()
+                                    .stream()
+                                    .map(user -> userService.convertUserToUserDto(user))
+                                    .collect(Collectors.toList()));
+        eventDto.setAddress(event.getAddress());
+        eventDto.setCountry(event.getCountry());
+        eventDto.setCity(event.getCity());
+        eventDto.setState(event.getState());
+        eventDto.setPostalCode(event.getPostalCode());
+        return eventDto;
+    }
 
     public Event getEventFromEventEntry(EventCreationEntry entry) {
         Event event = new Event();
@@ -59,4 +104,5 @@ public class EventService {
     public boolean isCoOrganizer(Event event, User user){
         return event.getCo_organizers().contains(user);
     }
+
 }
