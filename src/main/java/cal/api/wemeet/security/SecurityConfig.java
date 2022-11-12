@@ -43,6 +43,7 @@ public class SecurityConfig {
                     .authorizeRequests()
                         .antMatchers("/auth/**").permitAll()
                     .anyRequest().authenticated()
+                    //.anyRequest().permitAll()
                     .and()
                     .exceptionHandling().authenticationEntryPoint(jwtAuthEntryPoint)
                     .and()

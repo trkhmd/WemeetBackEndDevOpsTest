@@ -37,7 +37,6 @@ public class EventController {
         return "all";
     }
 
-    
     @PostMapping("/create")
     public ResponseEntity<?> registerEvent(@Valid @RequestBody EventCreationEntry entry) {
 
