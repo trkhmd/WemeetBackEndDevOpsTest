@@ -13,7 +13,6 @@ public class EventCreationEntry {
 
     @FutureOrPresent
     private Date date;
-
     private LocalTime time;
 
     @NotEmpty(message = "Title is required")
@@ -37,7 +36,7 @@ public class EventCreationEntry {
     @Size(min = 20, message = "Description should have at least 20 characters")
     private String description;
 
-    private boolean isPublic = false;
+    private boolean isPublic;
 
     private int maxParticipants = 0;
 
@@ -97,11 +96,11 @@ public class EventCreationEntry {
         this.description = description;
     }
 
-    public boolean isPublic() {
+    public boolean getIsPublic() {
         return isPublic;
     }
 
-    public void setPublic(boolean isPublic) {
+    public void setIsPublic(boolean isPublic) {
         this.isPublic = isPublic;
     }
 

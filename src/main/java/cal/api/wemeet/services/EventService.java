@@ -9,6 +9,7 @@ import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import cal.api.wemeet.models.Event;
@@ -35,14 +36,15 @@ public class EventService {
     }
 
     public List<EventDto> getAllPublicEvents() {
-        return eventRepo.findByIsPublic(true)
+        return eventRepo.findByIsPublic(true, Sort.by(Sort.Direction.ASC, "time"))
                         .stream()
+                        .filter(event -> event.getTime().after(new Date()))
                         .map(event -> converEventToEventDto(event))
                         .collect(Collectors.toList());
     }
 
     public List<EventDto> getAllUserEvents() {
-        return eventRepo.findByOrganizerId(userService.getAuthenticatedUser().getId())
+        return eventRepo.findByOrganizerId(userService.getAuthenticatedUser().getId(), Sort.by(Sort.Direction.DESC, "time"))
                         .stream()
                         .map(event -> converEventToEventDto(event))
                         .collect(Collectors.toList());
@@ -53,6 +55,7 @@ public class EventService {
         eventDto.setId(event.getId());
         eventDto.setDescription(event.getDescription());
         eventDto.setDate(event.getDate());
+        eventDto.setTime(event.getTime());
         eventDto.setIsPublic(event.getIsPublic());
         eventDto.setOrganizer(userService.convertUserToUserDto(event.getOrganizer()));
         eventDto.setParticipants(event.getParticipants()
@@ -68,6 +71,8 @@ public class EventService {
         eventDto.setCity(event.getCity());
         eventDto.setState(event.getState());
         eventDto.setPostalCode(event.getPostalCode());
+        eventDto.setPrice(event.getPrice());
+        eventDto.setTitle(event.getTitle());
         return eventDto;
     }
 
@@ -89,6 +94,10 @@ public class EventService {
         event.setPrice(entry.getPrice());
         event.setDescription(entry.getDescription());
         event.setMaxParticipants(entry.getMaxParticipants());
+        System.out.println(entry.getIsPublic());
+        event.setIsPublic(entry.getIsPublic());
+        System.out.println(event.getIsPublic());
+
         return event;
     }
 

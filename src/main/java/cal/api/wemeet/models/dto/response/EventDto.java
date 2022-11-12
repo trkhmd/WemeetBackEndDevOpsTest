@@ -8,7 +8,9 @@ import cal.api.wemeet.models.EventState;
 public class EventDto {
 
     private String id;
+    private String title;
     private Date date;
+    private Date time;
     private EventState state = EventState.COMING;
     private String Address;
     private String city;
@@ -19,7 +21,7 @@ public class EventDto {
     private UserDto organizer;
     private List<UserDto> co_organizers;
     private List<UserDto> participants;
-    private boolean isPublic = false;
+    private boolean isPublic;
     private int maxParticipants;
 
     public String getId() {
@@ -30,12 +32,28 @@ public class EventDto {
         this.id = id;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    
     public Date getDate() {
         return date;
     }
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
     }
 
     public EventState getState() {
@@ -118,20 +136,20 @@ public class EventDto {
         this.participants = participants;
     }
 
-    public boolean getIsPublic() {
-        return isPublic;
-    }
-
-    public void setIsPublic(boolean isPublic) {
-        this.isPublic = isPublic;
-    }
-
     public int getMaxParticipants() {
         return maxParticipants;
     }
 
     public void setMaxParticipants(int maxParticipants) {
         this.maxParticipants = maxParticipants;
+    }
+
+    public boolean getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(boolean isPublic) {
+        this.isPublic = isPublic;
     }
 
 }

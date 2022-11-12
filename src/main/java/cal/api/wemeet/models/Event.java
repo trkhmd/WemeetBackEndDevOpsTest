@@ -1,6 +1,5 @@
 package cal.api.wemeet.models;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +29,7 @@ public class Event {
     private List<User> co_organizers = new ArrayList<User>();
     @DBRef
     private List<User> participants = new ArrayList<User>();
-    private boolean isPublic = false;
+    private boolean isPublic;
     private int maxParticipants;
 
     public String getId() {
