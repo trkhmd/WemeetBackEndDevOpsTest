@@ -1,5 +1,6 @@
 package cal.api.wemeet.models;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,7 +14,9 @@ public class Event {
 
     @Id
     private String id;
+    private String title;
     private Date date;
+    private Date time;
     private EventState state = EventState.COMING;
     private String Address;
     private String city;
@@ -142,10 +145,21 @@ public class Event {
         this.maxParticipants = maxParticipants;
     }
 
-    
+    public String getTitle() {
+        return title;
+    }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
+    public Date getTime() {
+        return time;
+    }
 
-    
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
     
 }

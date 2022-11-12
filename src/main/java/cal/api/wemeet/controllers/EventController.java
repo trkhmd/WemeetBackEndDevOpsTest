@@ -42,7 +42,6 @@ public class EventController {
         return ResponseEntity.ok().body(eventService.getAllUserEvents());
     }
 
-
     
     @PostMapping("/create")
     public ResponseEntity<?> registerEvent(@Valid @RequestBody EventCreationEntry entry) {
