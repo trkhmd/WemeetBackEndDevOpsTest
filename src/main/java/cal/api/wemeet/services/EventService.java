@@ -82,7 +82,7 @@ public class EventService {
         Calendar cal = Calendar.getInstance();
         cal.setTime(entry.getDate());
         LocalDateTime localDateTime = entry.getTime().atDate(LocalDate.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH)));
-        localDateTime = localDateTime.plusHours(2);
+        localDateTime = localDateTime.plusHours(1);
         Instant instant = localDateTime.atZone(ZoneId.of("Europe/Paris")).toInstant();
         Date date = Date.from(instant);
         event.setTime(date);
@@ -94,10 +94,7 @@ public class EventService {
         event.setPrice(entry.getPrice());
         event.setDescription(entry.getDescription());
         event.setMaxParticipants(entry.getMaxParticipants());
-        System.out.println(entry.getIsPublic());
         event.setIsPublic(entry.getIsPublic());
-        System.out.println(event.getIsPublic());
-
         return event;
     }
 
