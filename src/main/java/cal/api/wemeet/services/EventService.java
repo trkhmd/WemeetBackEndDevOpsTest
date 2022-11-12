@@ -1,18 +1,21 @@
 package cal.api.wemeet.services;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import cal.api.wemeet.models.Event;
 import cal.api.wemeet.models.User;
 import cal.api.wemeet.models.dto.request.EventCreationEntry;
+import cal.api.wemeet.models.dto.response.EventDto;
 import cal.api.wemeet.repositories.EventRepository;
 import cal.api.wemeet.repositories.UserRepository;
 
@@ -28,13 +31,58 @@ public class EventService {
     @Autowired
     UserService userService;
 
+    public List<Event> getAllEvents(){
+        return eventRepo.findAll();
+    }
+
+    public List<EventDto> getAllPublicEvents() {
+        return eventRepo.findByIsPublic(true, Sort.by(Sort.Direction.ASC, "time"))
+                        .stream()
+                        .filter(event -> event.getTime().after(new Date()))
+                        .map(event -> converEventToEventDto(event))
+                        .collect(Collectors.toList());
+    }
+
+    public List<EventDto> getAllUserEvents() {
+        return eventRepo.findByOrganizerId(userService.getAuthenticatedUser().getId(), Sort.by(Sort.Direction.DESC, "time"))
+                        .stream()
+                        .map(event -> converEventToEventDto(event))
+                        .collect(Collectors.toList());
+    }
+
+    public EventDto converEventToEventDto(Event event) {
+        EventDto eventDto = new EventDto();
+        eventDto.setId(event.getId());
+        eventDto.setDescription(event.getDescription());
+        eventDto.setDate(event.getDate());
+        eventDto.setTime(event.getTime());
+        eventDto.setIsPublic(event.getIsPublic());
+        eventDto.setOrganizer(userService.convertUserToUserDto(event.getOrganizer()));
+        eventDto.setParticipants(event.getParticipants()
+                                    .stream()
+                                    .map(user -> userService.convertUserToUserDto(user))
+                                    .collect(Collectors.toList()));
+        eventDto.setCo_organizers(event.getCo_organizers()
+                                    .stream()
+                                    .map(user -> userService.convertUserToUserDto(user))
+                                    .collect(Collectors.toList()));
+        eventDto.setAddress(event.getAddress());
+        eventDto.setCountry(event.getCountry());
+        eventDto.setCity(event.getCity());
+        eventDto.setState(event.getState());
+        eventDto.setPostalCode(event.getPostalCode());
+        eventDto.setPrice(event.getPrice());
+        eventDto.setTitle(event.getTitle());
+        return eventDto;
+    }
+
     public Event getEventFromEventEntry(EventCreationEntry entry) {
         Event event = new Event();
         event.setDate(entry.getDate());
         Calendar cal = Calendar.getInstance();
         cal.setTime(entry.getDate());
         LocalDateTime localDateTime = entry.getTime().atDate(LocalDate.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH)));
-        localDateTime = localDateTime.plusHours(2);
+        localDateTime = localDateTime.plusHours(1);
         Instant instant = localDateTime.atZone(ZoneId.of("Europe/Paris")).toInstant();
         Date date = Date.from(instant);
         event.setTime(date);
@@ -46,6 +94,7 @@ public class EventService {
         event.setPrice(entry.getPrice());
         event.setDescription(entry.getDescription());
         event.setMaxParticipants(entry.getMaxParticipants());
+        event.setIsPublic(entry.getIsPublic());
         return event;
     }
 
@@ -74,4 +123,5 @@ public class EventService {
     public boolean isCoOrganizer(Event event, User user){
         return event.getCo_organizers().contains(user);
     }
+
 }

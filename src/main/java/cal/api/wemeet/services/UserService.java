@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import cal.api.wemeet.models.User;
 import cal.api.wemeet.models.dto.request.UserCreationEntry;
 import cal.api.wemeet.models.dto.response.JwtResponse;
+import cal.api.wemeet.models.dto.response.UserDto;
 import cal.api.wemeet.repositories.UserRepository;
 import cal.api.wemeet.security.jwt.JwtTokenUtil;
 
@@ -69,5 +70,12 @@ public class UserService {
         return user;
     }
     
+    public UserDto convertUserToUserDto(User user) {
+        UserDto userDto = new UserDto();
+        userDto.setFirstName(user.getFirstName());
+        userDto.setLastName(user.getLastName());
+        userDto.setEmail(user.getEmail());
+        return userDto;
+    }
 
 }

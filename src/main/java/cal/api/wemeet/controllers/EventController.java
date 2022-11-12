@@ -33,10 +33,16 @@ public class EventController {
     UserService userService;
 
     @GetMapping
-    public String all() {
-        return "all";
+    public ResponseEntity<?> allPublicEvents() {
+        return ResponseEntity.ok().body(eventService.getAllPublicEvents());
     }
 
+    @GetMapping("/mine")
+    public ResponseEntity<?> allMyEvents() {
+        return ResponseEntity.ok().body(eventService.getAllUserEvents());
+    }
+
+    
     @PostMapping("/create")
     public ResponseEntity<?> registerEvent(@Valid @RequestBody EventCreationEntry entry) {
 
