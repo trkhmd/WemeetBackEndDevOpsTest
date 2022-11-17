@@ -1,5 +1,7 @@
 package cal.api.wemeet.controllers;
 
+import java.util.Date;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +47,11 @@ public class EventController {
     
     @PostMapping("/create")
     public ResponseEntity<?> registerEvent(@Valid @RequestBody EventCreationEntry entry) {
-
+        
         Event event = eventService.getEventFromEventEntry(entry);
+        if (event.getDate().before(new Date())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new SimpleResponse("Event date cannot be in the past"));
+        }
         eventService.setEventOrganizer(event);
         eventService.saveEvent(event);
 

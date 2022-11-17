@@ -15,7 +15,6 @@ public class Event {
     private String id;
     private String title;
     private Date date;
-    private Date time;
     private EventState state = EventState.COMING;
     private String Address;
     private String city;
@@ -150,14 +149,6 @@ public class Event {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public Date getTime() {
-        return time;
-    }
-
-    public void setTime(Date time) {
-        this.time = time;
     }
 
     
