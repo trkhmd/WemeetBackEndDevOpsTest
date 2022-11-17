@@ -36,15 +36,15 @@ public class EventService {
     }
 
     public List<EventDto> getAllPublicEvents() {
-        return eventRepo.findByIsPublic(true, Sort.by(Sort.Direction.ASC, "time"))
+        return eventRepo.findByIsPublic(true, Sort.by(Sort.Direction.ASC, "date"))
                         .stream()
-                        .filter(event -> event.getTime().after(new Date()))
+                        .filter(event -> event.getDate().after(new Date()))
                         .map(event -> converEventToEventDto(event))
                         .collect(Collectors.toList());
     }
 
     public List<EventDto> getAllUserEvents() {
-        return eventRepo.findByOrganizerId(userService.getAuthenticatedUser().getId(), Sort.by(Sort.Direction.DESC, "time"))
+        return eventRepo.findByOrganizerId(userService.getAuthenticatedUser().getId(), Sort.by(Sort.Direction.DESC, "date"))
                         .stream()
                         .map(event -> converEventToEventDto(event))
                         .collect(Collectors.toList());
@@ -55,7 +55,6 @@ public class EventService {
         eventDto.setId(event.getId());
         eventDto.setDescription(event.getDescription());
         eventDto.setDate(event.getDate());
-        eventDto.setTime(event.getTime());
         eventDto.setIsPublic(event.getIsPublic());
         eventDto.setOrganizer(userService.convertUserToUserDto(event.getOrganizer()));
         eventDto.setParticipants(event.getParticipants()
@@ -78,14 +77,7 @@ public class EventService {
 
     public Event getEventFromEventEntry(EventCreationEntry entry) {
         Event event = new Event();
-        event.setDate(entry.getDate());
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(entry.getDate());
-        LocalDateTime localDateTime = entry.getTime().atDate(LocalDate.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH)));
-        localDateTime = localDateTime.plusHours(1);
-        Instant instant = localDateTime.atZone(ZoneId.of("Europe/Paris")).toInstant();
-        Date date = Date.from(instant);
-        event.setTime(date);
+        event.setDate(buildDate(entry));
         event.setAddress(entry.getAddress());
         event.setTitle(entry.getTitle());
         event.setCity(entry.getCity());
@@ -122,6 +114,16 @@ public class EventService {
 
     public boolean isCoOrganizer(Event event, User user){
         return event.getCo_organizers().contains(user);
+    }
+
+    private Date buildDate(EventCreationEntry entry) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(entry.getDate());
+        LocalDateTime localDateTime = entry.getTime().atDate(LocalDate.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH)));
+        localDateTime = localDateTime.plusHours(1);
+        Instant instant = localDateTime.atZone(ZoneId.of("Europe/Paris")).toInstant();
+        Date date = Date.from(instant);
+        return date;
     }
 
 }

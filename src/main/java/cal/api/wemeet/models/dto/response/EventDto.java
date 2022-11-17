@@ -10,7 +10,6 @@ public class EventDto {
     private String id;
     private String title;
     private Date date;
-    private Date time;
     private EventState state = EventState.COMING;
     private String Address;
     private String city;
@@ -46,14 +45,6 @@ public class EventDto {
 
     public void setDate(Date date) {
         this.date = date;
-    }
-
-    public Date getTime() {
-        return time;
-    }
-
-    public void setTime(Date time) {
-        this.time = time;
     }
 
     public EventState getState() {
