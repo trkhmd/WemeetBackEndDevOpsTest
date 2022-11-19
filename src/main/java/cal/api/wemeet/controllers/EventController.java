@@ -44,6 +44,19 @@ public class EventController {
         return ResponseEntity.ok().body(eventService.getAllUserEvents());
     }
 
+    @GetMapping("/event/{id}")
+    public ResponseEntity<?> getEventById(@PathVariable String id) {
+
+        Event event = eventService.getEventById(id);
+        if (event == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Event not exist !");
+        }
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(event) ;
+    }
+
+
     
     @PostMapping("/create")
     public ResponseEntity<?> registerEvent(@Valid @RequestBody EventCreationEntry entry) {
