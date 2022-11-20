@@ -1,6 +1,7 @@
 package cal.api.wemeet.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -11,5 +12,4 @@ public interface EventRepository extends MongoRepository<Event, String> {
 
     List<Event> findByIsPublic(boolean isPublic, Sort sort);
     List<Event> findByOrganizerId(String organizerId, Sort sort);
-    
 }
