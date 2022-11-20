@@ -97,5 +97,31 @@ public class EventController {
         }
     }
 
+    @PostMapping("/edit/{id}")
+    public ResponseEntity<?> editlEvent(@RequestBody EventCreationEntry entry , @PathVariable("id") String id) {
+
+        Event existEvent = eventService.getEventById(id);
+        if (existEvent == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new SimpleResponse("The event to cancel is not found!"));
+        }
+
+        User user = userService.getAuthenticatedUser();
+
+        if (eventService.isOrganizer(existEvent, user) || eventService.isCoOrganizer(existEvent, user)){
+            Event event = eventService.getEventFromEventEntry(entry);
+            if (event.getDate().before(new Date())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new SimpleResponse("Event date cannot be in the past"));
+            }
+
+            event.setId(existEvent.getId());
+            eventService.saveEvent(event);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(event);
+
+        }
+        return null;
+    }
+
 
 }
