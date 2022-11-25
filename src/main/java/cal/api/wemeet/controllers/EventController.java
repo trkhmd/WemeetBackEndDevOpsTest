@@ -98,7 +98,7 @@ public class EventController {
     }
 
     @PostMapping("/edit/{id}")
-    public ResponseEntity<?> editlEvent(@RequestBody EventCreationEntry entry , @PathVariable("id") String id) {
+    public ResponseEntity<?> editEvent(@RequestBody EventCreationEntry entry , @PathVariable("id") String id) {
 
         Event existEvent = eventService.getEventById(id);
         if (existEvent == null){
@@ -120,7 +120,8 @@ public class EventController {
                     .body(event);
 
         }
-        return null;
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new SimpleResponse("You are not allowed to edit this event!"));
     }
 
 

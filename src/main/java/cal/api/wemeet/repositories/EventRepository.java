@@ -1,7 +1,6 @@
 package cal.api.wemeet.repositories;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
