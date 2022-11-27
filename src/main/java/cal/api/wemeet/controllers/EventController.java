@@ -110,11 +110,10 @@ public class EventController {
         User user = userService.getAuthenticatedUser();
 
         if (eventService.isOrganizer(existEvent, user) || eventService.isCoOrganizer(existEvent, user)){
-            if (entry.getDate().before(new Date())) {
+            existEvent.setDate(eventService.buildDate(entry));
+            if (existEvent.getDate().before(new Date())) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new SimpleResponse("Event date cannot be in the past"));
             }
-
-            existEvent.setDate(eventService.buildDate(entry));
             existEvent.setAddress(entry.getAddress());
             existEvent.setTitle(entry.getTitle());
             existEvent.setCity(entry.getCity());
