@@ -110,26 +110,25 @@ public class EventController {
         User user = userService.getAuthenticatedUser();
 
         if (eventService.isOrganizer(existEvent, user) || eventService.isCoOrganizer(existEvent, user)){
-            Event event = eventService.getEventFromEventEntry(entry);
-            if (event.getDate().before(new Date())) {
+            if (entry.getDate().before(new Date())) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new SimpleResponse("Event date cannot be in the past"));
             }
 
-            event.setDate(eventService.buildDate(entry));
-            event.setAddress(entry.getAddress());
-            event.setTitle(entry.getTitle());
-            event.setCity(entry.getCity());
-            event.setPostalCode(entry.getPostalCode());
-            event.setCountry(entry.getCountry());
-            event.setPrice(entry.getPrice());
-            event.setDescription(entry.getDescription());
-            event.setMaxParticipants(entry.getMaxParticipants());
-            event.setIsPublic(entry.getIsPublic());
+            existEvent.setDate(eventService.buildDate(entry));
+            existEvent.setAddress(entry.getAddress());
+            existEvent.setTitle(entry.getTitle());
+            existEvent.setCity(entry.getCity());
+            existEvent.setPostalCode(entry.getPostalCode());
+            existEvent.setCountry(entry.getCountry());
+            existEvent.setPrice(entry.getPrice());
+            existEvent.setDescription(entry.getDescription());
+            existEvent.setMaxParticipants(entry.getMaxParticipants());
+            existEvent.setIsPublic(entry.getIsPublic());
 
-            eventService.saveEvent(event);
+            eventService.saveEvent(existEvent);
 
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(event);
+                    .body(existEvent);
 
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
