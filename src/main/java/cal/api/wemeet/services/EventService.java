@@ -116,7 +116,7 @@ public class EventService {
         return event.getCo_organizers().contains(user);
     }
 
-    private Date buildDate(EventCreationEntry entry) {
+    public Date buildDate(EventCreationEntry entry) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(entry.getDate());
         LocalDateTime localDateTime = entry.getTime().atDate(LocalDate.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH)));

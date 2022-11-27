@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -97,8 +98,8 @@ public class EventController {
         }
     }
 
-    @PostMapping("/edit/{id}")
-    public ResponseEntity<?> editEvent(@RequestBody EventCreationEntry entry , @PathVariable("id") String id) {
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<?> editEvent(@RequestBody EventCreationEntry entry, @PathVariable("id") String id) {
 
         Event existEvent = eventService.getEventById(id);
         if (existEvent == null){
@@ -114,8 +115,19 @@ public class EventController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new SimpleResponse("Event date cannot be in the past"));
             }
 
-            event.setId(existEvent.getId());
+            event.setDate(eventService.buildDate(entry));
+            event.setAddress(entry.getAddress());
+            event.setTitle(entry.getTitle());
+            event.setCity(entry.getCity());
+            event.setPostalCode(entry.getPostalCode());
+            event.setCountry(entry.getCountry());
+            event.setPrice(entry.getPrice());
+            event.setDescription(entry.getDescription());
+            event.setMaxParticipants(entry.getMaxParticipants());
+            event.setIsPublic(entry.getIsPublic());
+
             eventService.saveEvent(event);
+
             return ResponseEntity.status(HttpStatus.OK)
                     .body(event);
 
