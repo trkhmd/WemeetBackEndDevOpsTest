@@ -50,6 +50,13 @@ public class EventService {
                         .collect(Collectors.toList());
     }
 
+    public Object getAllUserEventParticipations() {
+        return userRepo.findById(userService.getAuthenticatedUser().getId()).get().getEvents()
+                        .stream()
+                        .map(event -> converEventToEventDto(event))
+                        .collect(Collectors.toList());
+    }
+
     public EventDto converEventToEventDto(Event event) {
         EventDto eventDto = new EventDto();
         eventDto.setId(event.getId());
@@ -125,5 +132,16 @@ public class EventService {
         Date date = Date.from(instant);
         return date;
     }
+
+    public boolean isAlreadyParticipating(Event event, User authenticatedUser) {
+        for(User user : event.getParticipants()) {
+            if (user.getId().contentEquals(authenticatedUser.getId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 
 }
