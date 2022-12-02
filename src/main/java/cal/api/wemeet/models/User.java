@@ -1,6 +1,10 @@
 package cal.api.wemeet.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -16,6 +20,9 @@ public class User {
     private String firstName;
     private String lastName;
     private String city;
+
+    @DBRef
+    private List<Event> events = new ArrayList<Event>();
 
     public User() {
     }
@@ -55,5 +62,13 @@ public class User {
     }
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
     }
 }
