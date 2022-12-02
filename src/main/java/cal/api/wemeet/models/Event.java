@@ -22,6 +22,8 @@ public class Event {
     private String country;
     private double price;
     private String description;
+    private double longitude;
+    private double latitude; 
     @DBRef
     private User organizer;
     @DBRef
@@ -151,5 +153,20 @@ public class Event {
         this.title = title;
     }
 
-    
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
 }

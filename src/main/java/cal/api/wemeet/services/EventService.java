@@ -72,6 +72,9 @@ public class EventService {
         eventDto.setPostalCode(event.getPostalCode());
         eventDto.setPrice(event.getPrice());
         eventDto.setTitle(event.getTitle());
+        eventDto.setLatitude(event.getLatitude());
+        eventDto.setLongitude(event.getLongitude());
+        eventDto.setMaxParticipants(event.getMaxParticipants());
         return eventDto;
     }
 
@@ -107,8 +110,8 @@ public class EventService {
     }
 
     public boolean isOrganizer(Event event, User user){
-        System.out.println("event.getOrganizer().getId() : " + event.getOrganizer().getId());
-        System.out.println("user.getId() : " + user.getId());
+        // System.out.println("event.getOrganizer().getId() : " + event.getOrganizer().getId());
+        // System.out.println("user.getId() : " + user.getId());
         return user.getId().contentEquals(event.getOrganizer().getId());
     }
 

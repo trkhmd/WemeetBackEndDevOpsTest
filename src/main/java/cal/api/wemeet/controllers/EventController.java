@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.validation.Valid;
 
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import cal.api.wemeet.models.Event;
 import cal.api.wemeet.models.EventState;
@@ -66,9 +68,21 @@ public class EventController {
         if (event.getDate().before(new Date())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new SimpleResponse("Event date cannot be in the past"));
         }
+        // appel api get
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "https://nominatim.openstreetmap.org/search?q="+ event.getAddress() + "&format=json";
+        String result = restTemplate.getForObject(url, String.class);
+        JSONArray json = new JSONArray(result);
+        if(json.length() != 0) {
+            event.setLatitude(json.getJSONObject(0).getDouble("lat"));
+            event.setLongitude(json.getJSONObject(0).getDouble("lon"));
+            
+        } else {
+            event.setLatitude(0.0);
+            event.setLongitude(0.0);
+        }
         eventService.setEventOrganizer(event);
         eventService.saveEvent(event);
-
         return ResponseEntity.status(HttpStatus.CREATED)
         .body(new SimpleResponse("Event created successfully!"));
     }
