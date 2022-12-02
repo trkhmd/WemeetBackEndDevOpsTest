@@ -75,8 +75,6 @@ public class EventController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("The event is cancelled or already finished !");
         }
-        System.out.println("EVENT PARTICIPANTS : " + event.getParticipants());
-        System.out.println("USER : " + userService.getAuthenticatedUser());
         if (eventService.isAlreadyParticipating(event, userService.getAuthenticatedUser())){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("You are already participating to this event !");
@@ -86,35 +84,30 @@ public class EventController {
         eventService.saveEvent(event);
         user.getEvents().add(event);
         userService.saveUser(user);
-
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new SimpleResponse("You are now participating to this event !")) ;
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> registerEvent(@Valid @RequestBody EventCreationEntry entry) {
-        
+    public ResponseEntity<?> registerEvent(@Valid @RequestBody EventCreationEntry entry) {        
         Event event = eventService.getEventFromEventEntry(entry);
         if (event.getDate().before(new Date())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new SimpleResponse("Event date cannot be in the past"));
         }
-        // appel api get
         RestTemplate restTemplate = new RestTemplate();
         String url = "https://nominatim.openstreetmap.org/search?q="+ event.getAddress() + "&format=json";
         String result = restTemplate.getForObject(url, String.class);
         JSONArray json = new JSONArray(result);
         if(json.length() != 0) {
             event.setLatitude(json.getJSONObject(0).getDouble("lat"));
-            event.setLongitude(json.getJSONObject(0).getDouble("lon"));
-            
+            event.setLongitude(json.getJSONObject(0).getDouble("lon"));            
         } else {
             event.setLatitude(0.0);
             event.setLongitude(0.0);
         }
         eventService.setEventOrganizer(event);
         eventService.saveEvent(event);
-        return ResponseEntity.status(HttpStatus.CREATED)
-        .body(new SimpleResponse("Event created successfully!"));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new SimpleResponse("Event created successfully!"));
     }
 
     @PostMapping("/cancel/{id}")
