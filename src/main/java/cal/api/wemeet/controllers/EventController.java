@@ -47,6 +47,11 @@ public class EventController {
         return ResponseEntity.ok().body(eventService.getAllUserEvents());
     }
 
+    @GetMapping("/participations")
+    public ResponseEntity<?> allMyEventParticipations() {
+        return ResponseEntity.ok().body(eventService.getAllUserEventParticipations());
+    }
+
     @GetMapping("/event/{id}")
     public ResponseEntity<?> getEventById(@PathVariable String id) {
 
@@ -59,8 +64,33 @@ public class EventController {
                 .body(event) ;
     }
 
+    @PostMapping("/participate/{id}")
+    public ResponseEntity<?> participate(@PathVariable String id) {
+        Event event = eventService.getEventById(id);
+        if (event == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("The event is not found !");
+        }
+        if (event.getState() != EventState.COMING){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("The event is cancelled or already finished !");
+        }
+        System.out.println("EVENT PARTICIPANTS : " + event.getParticipants());
+        System.out.println("USER : " + userService.getAuthenticatedUser());
+        if (eventService.isAlreadyParticipating(event, userService.getAuthenticatedUser())){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("You are already participating to this event !");
+        }
+        User user = userService.getAuthenticatedUser();
+        event.getParticipants().add(user);
+        eventService.saveEvent(event);
+        user.getEvents().add(event);
+        userService.saveUser(user);
 
-    
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new SimpleResponse("You are now participating to this event !")) ;
+    }
+
     @PostMapping("/create")
     public ResponseEntity<?> registerEvent(@Valid @RequestBody EventCreationEntry entry) {
         
