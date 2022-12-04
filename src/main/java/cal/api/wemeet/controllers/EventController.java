@@ -1,5 +1,8 @@
 package cal.api.wemeet.controllers;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 import javax.validation.Valid;
@@ -177,12 +180,16 @@ public class EventController {
 
     @PostMapping("/invite/{id}")
     public ResponseEntity<?> inviteUser(@PathVariable("id") String id, @RequestBody String email) {
+        System.out.println("ENTRY : " + email);
         Event event = eventService.getEventById(id);
         if (event == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new SimpleResponse("The event to cancel is not found!"));
         }
-        
+
+        email = URLDecoder.decode(email, StandardCharsets.UTF_8);
+
+        System.out.println("RESULT : " + email);
         User userInvited = userService.getUserByEmail(email);
 
         if (userInvited == null){
