@@ -4,7 +4,9 @@ import java.util.Date;
 
 import javax.validation.Valid;
 
+import cal.api.wemeet.services.EmailSenderService;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +39,8 @@ public class EventController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    EmailSenderService emailSenderService;
     @GetMapping
     public ResponseEntity<?> allPublicEvents() {
         return ResponseEntity.ok().body(eventService.getAllPublicEvents());
@@ -171,5 +175,35 @@ public class EventController {
                 .body(new SimpleResponse("You are not allowed to edit this event!"));
     }
 
+    @PostMapping("/invite/{id}")
+    public ResponseEntity<?> inviteUser(@PathVariable("id") String id, @RequestBody String email) {
+        Event event = eventService.getEventById(id);
+        if (event == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new SimpleResponse("The event to cancel is not found!"));
+        }
+        
+        User userInvited = userService.getUserByEmail(email);
 
+        if (userInvited == null){
+            emailSenderService.sendEmail(email, "Invitation to an event", "You have been invited to an event by " + userService.getAuthenticatedUser().getFirstName() + " " + userService.getAuthenticatedUser().getLastName() + ". Please register to our website to participate to this event with the following link : http://localhost:3000/events/" + event.getId());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new SimpleResponse("The user to invite is not found! we sent him an email to join us!"));
+        }
+
+        User userOrganizer = userService.getAuthenticatedUser();
+        if (eventService.isOrganizer(event, userOrganizer) || eventService.isCoOrganizer(event, userOrganizer)){
+            if (eventService.isAlreadyParticipating(event, userInvited)){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(new SimpleResponse("The user is already participating to this event!"));
+            }
+            event.getParticipants().add(userInvited);
+            eventService.saveEvent(event);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new SimpleResponse("User invited successfully!"));
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(new SimpleResponse("You are not allowed to invite users to this event!"));
+        }
+    }
 }
