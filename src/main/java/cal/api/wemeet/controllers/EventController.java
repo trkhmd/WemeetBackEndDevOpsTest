@@ -1,15 +1,12 @@
 package cal.api.wemeet.controllers;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 import javax.validation.Valid;
 
-import cal.api.wemeet.services.EmailSenderService;
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +19,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+import org.w3c.dom.events.Event;
 
-import cal.api.wemeet.models.Event;
 import cal.api.wemeet.models.EventState;
 import cal.api.wemeet.models.User;
 import cal.api.wemeet.models.dto.request.EventCreationEntry;
 import cal.api.wemeet.models.dto.response.SimpleResponse;
+import cal.api.wemeet.services.EmailSenderService;
 import cal.api.wemeet.services.EventService;
 import cal.api.wemeet.services.UserService;
 
@@ -159,6 +157,17 @@ public class EventController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new SimpleResponse("Event date cannot be in the past"));
             }
             existEvent.setAddress(entry.getAddress());
+            RestTemplate restTemplate = new RestTemplate();
+            String url = "https://nominatim.openstreetmap.org/search?q=" + existEvent.getAddress() + "&format=json";
+            String result = restTemplate.getForObject(url, String.class);
+            JSONArray json = new JSONArray(result);
+            if (json.length() != 0) {
+                existEvent.setLatitude(json.getJSONObject(0).getDouble("lat"));
+                existEvent.setLongitude(json.getJSONObject(0).getDouble("lon"));
+            } else {
+                existEvent.setLatitude(0.0);
+                existEvent.setLongitude(0.0);
+            }
             existEvent.setTitle(entry.getTitle());
             existEvent.setCity(entry.getCity());
             existEvent.setPostalCode(entry.getPostalCode());
