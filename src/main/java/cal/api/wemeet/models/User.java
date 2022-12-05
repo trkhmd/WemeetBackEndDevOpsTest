@@ -3,6 +3,8 @@ package cal.api.wemeet.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -22,6 +24,7 @@ public class User {
     private String city;
 
     @DBRef
+    @JsonBackReference
     private List<Event> events = new ArrayList<Event>();
 
     public User() {

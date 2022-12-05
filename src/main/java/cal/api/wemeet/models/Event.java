@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -25,10 +26,13 @@ public class Event {
     private double longitude;
     private double latitude; 
     @DBRef
+    @JsonManagedReference
     private User organizer;
     @DBRef
+    @JsonManagedReference
     private List<User> co_organizers = new ArrayList<User>();
     @DBRef
+    @JsonManagedReference
     private List<User> participants = new ArrayList<User>();
     private boolean isPublic;
     private int maxParticipants;
