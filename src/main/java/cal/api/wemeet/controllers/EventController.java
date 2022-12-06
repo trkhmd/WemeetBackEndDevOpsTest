@@ -6,6 +6,7 @@ import java.util.Date;
 
 import javax.validation.Valid;
 
+import cal.api.wemeet.models.Event;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-import org.w3c.dom.events.Event;
+
 
 import cal.api.wemeet.models.EventState;
 import cal.api.wemeet.models.User;
