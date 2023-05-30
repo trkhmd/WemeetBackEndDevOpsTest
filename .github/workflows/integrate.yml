@@ -1,0 +1,38 @@
+name:  Spring boot Continuous Integration
+
+on:
+    push:
+        branches: 
+            - main
+    pull_request:
+        branches: [master]
+
+jobs:
+    test_pull_request:
+        runs-on: self-hosted
+        steps:
+            - name : Checkout 
+              uses: actions/checkout@v3
+
+            - name : Setup Java
+              uses : actions/setup-java@v3
+              with : 
+                java-version: 17
+                distribution: 'adopt'
+            
+            - name: Set up Maven
+              uses: stCarolas/setup-maven@v4.5
+              with:
+                maven-version: 3.8.2
+            
+            - name: Run test
+              run: mvn clean install
+
+            - name: Rename jar
+              run: cp target/*.jar target/backen{{ github.sha }}.jar
+
+            - name: Upload artifact
+              uses: actions/upload-artifact@v2
+              with:
+                name: backend{{ github.sha }}.jar
+                path: target/backen{{ github.sha }}.jar

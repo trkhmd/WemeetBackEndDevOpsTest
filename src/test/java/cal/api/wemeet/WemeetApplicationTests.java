@@ -10,4 +10,8 @@ class WemeetApplicationTests {
 	void contextLoads() {
 	}
 
+	@Test
+	void alwaysPass() {
+		assert true;
+	}
 }
