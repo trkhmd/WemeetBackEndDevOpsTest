@@ -29,7 +29,7 @@ jobs:
               run: mvn clean install
 
             - name: Rename jar
-              run: cp target/*.jar target/backend{{ github.sha }}.jar
+              run: cp target/*.jar backend{{ github.sha }}.jar
 
             - name: Upload artifact
               uses: actions/upload-artifact@v2
